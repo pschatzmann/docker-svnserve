@@ -1,0 +1,18 @@
+version: '2'
+services:
+    svnserve:
+        image: pschatzmann/svnserve
+        container_name: svnserve
+        ports:
+            - "3690:3690"
+        environment:
+            - SVN_REPONAME=main
+        volumes:
+            - /srv/svn:/srv/svn
+            - /backup:/backup 
+        labels:
+            - "job.schedule=0 * * * *"
+            - "job.svn-backup.command=dump -q /srv/svn | bzip2 -9 > /backup/{name}"
+        restart: always
+
+
